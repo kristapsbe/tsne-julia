@@ -63,20 +63,20 @@ end
 
 
 function similarities(D, m, n, tol, perp, epsilon)
-	# the target entropy of the gaussian kernels is the log of the target perplexity
-	h_target = log(perp)
+  # the target entropy of the gaussian kernels is the log of the target perplexity
+  h_target = log(perp)
 
   # the similarity matrix that we're going to populate
   P = [[Float64(0) for i in 1:n] for j in 1:n]
 
   # work through all of the rows
   for i in 1:n
-		# perform a binary search for the Gaussian kernel precision (beta)
-		# such that the entropy (and thus the perplexity) of the distribution
-		# given the data is the same for all data points
-		beta_min = -Inf
-		beta_max = Inf
-		beta = 1 # initial value of precision
+    # perform a binary search for the Gaussian kernel precision (beta)
+    # such that the entropy (and thus the perplexity) of the distribution
+    # given the data is the same for all data points
+    beta_min = -Inf
+    beta_max = Inf
+    beta = 1 # initial value of precision
 
     for j in 1:max_binary
       # compute raw probabilities with beta precision (along with sum of all raw probabilities)
@@ -105,7 +105,7 @@ function similarities(D, m, n, tol, perp, epsilon)
         end
       end
 
-			# adjust beta to move H closer to Htarget
+      # adjust beta to move H closer to Htarget
       h_diff = h-h_target
       if h_diff > 0
         # entropy is too high (distribution too spread-out)
@@ -117,7 +117,7 @@ function similarities(D, m, n, tol, perp, epsilon)
           beta = (beta+beta_max)/2
         end
       else
-				# entropy is too low - need to decrease precision
+        # entropy is too low - need to decrease precision
         beta_max = beta # move down the bounds
         if beta_min == -Inf
           beta /= 2
@@ -126,9 +126,9 @@ function similarities(D, m, n, tol, perp, epsilon)
         end
       end
 
-			# if current entropy is within specified tolerance - we are done with this data point
-			if abs(h_diff) < tol
-				break
+      # if current entropy is within specified tolerance - we are done with this data point
+      if abs(h_diff) < tol
+        break
       end
     end
   end
